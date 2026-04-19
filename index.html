@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ashley CRM — Quick Debrief</title>
+    <title>Ashley CRM — Sales Process Assistant</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -32,7 +32,7 @@
         .progress-bar {
             display: flex;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
             padding: 22px;
             background: rgba(255,255,255,0.02);
         }
@@ -61,6 +61,12 @@
             color: #fff;
             margin-bottom: 24px;
             letter-spacing: -0.3px;
+        }
+        .section-subtitle {
+            font-size: 14px;
+            color: #808090;
+            margin-bottom: 20px;
+            line-height: 1.5;
         }
         .input-group { margin-bottom: 22px; }
         label {
@@ -143,11 +149,35 @@
             transform: translateY(-2px);
             box-shadow: 0 12px 32px rgba(102, 126, 234, 0.45);
         }
-        .btn-primary:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
+        .btn-skip {
+            background: transparent;
+            border: 2px solid rgba(255,255,255,0.15);
+            color: #808090;
+        }
+        .discovery-question {
+            background: rgba(255,255,255,0.03);
+            border-radius: 14px;
+            padding: 18px;
+            margin-bottom: 16px;
+            border-left: 3px solid #667eea;
+        }
+        .discovery-question label {
+            text-transform: none;
+            font-size: 15px;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+        .discovery-question .question-num {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 24px;
+            font-size: 12px;
+            margin-right: 8px;
         }
         .output-box {
             background: #0a0a12;
@@ -160,31 +190,16 @@
             line-height: 1.7;
             color: #c0c0d0;
             white-space: pre-wrap;
-            max-height: 320px;
+            word-wrap: break-word;
+            max-height: 400px;
             overflow-y: auto;
-        }
-        .output-box::-webkit-scrollbar { width: 6px; }
-        .output-box::-webkit-scrollbar-thumb {
-            background: rgba(102, 126, 234, 0.5);
-            border-radius: 3px;
         }
         .copy-btn {
             width: 100%;
             background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
             box-shadow: 0 8px 24px rgba(40, 167, 69, 0.3);
+            margin-bottom: 12px;
         }
-        .copy-btn:hover {
-            box-shadow: 0 12px 32px rgba(40, 167, 69, 0.4);
-        }
-        .summary-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 14px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.06);
-        }
-        .summary-row:last-child { border-bottom: none; }
-        .summary-label { color: #808090; font-size: 14px; }
-        .summary-value { color: #fff; font-weight: 600; font-size: 14px; }
         .share-options {
             display: flex;
             gap: 10px;
@@ -203,18 +218,54 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+            border: none;
         }
-        .share-telegram {
-            background: #0088cc;
-            color: white;
+        .share-telegram { background: #0088cc; color: white; }
+        .share-whatsapp { background: #25d366; color: white; }
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
         }
-        .share-whatsapp {
-            background: #25d366;
-            color: white;
+        .summary-label { color: #808090; font-size: 14px; }
+        .summary-value { color: #fff; font-weight: 600; font-size: 14px; }
+        .instructions {
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
         }
-        .share-email {
-            background: rgba(255,255,255,0.1);
-            color: #fff;
+        .instructions h4 { color: #667eea; font-size: 14px; margin-bottom: 8px; }
+        .instructions p { color: #a0a0b0; font-size: 13px; line-height: 1.5; }
+        .collapse-btn {
+            background: rgba(255,255,255,0.05);
+            border: none;
+            color: #667eea;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 13px;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 16px;
+        }
+        .product-detail-box {
+            background: rgba(40, 167, 69, 0.1);
+            border: 1px solid rgba(40, 167, 69, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        .product-detail-box h4 {
+            color: #28a745;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+        .product-detail-box p {
+            color: #a0a0b0;
+            font-size: 12px;
+            line-height: 1.5;
         }
     </style>
 </head>
@@ -222,7 +273,7 @@
     <div class="container">
         <div class="header">
             <h1>🛋️ Ashley CRM</h1>
-            <p>Quick Debrief — Tap through, never lose a client</p>
+            <p>Sales Process Assistant</p>
         </div>
         
         <div class="progress-bar">
@@ -231,9 +282,10 @@
             <div class="step-dot" data-step="3"></div>
             <div class="step-dot" data-step="4"></div>
             <div class="step-dot" data-step="5"></div>
+            <div class="step-dot" data-step="6"></div>
         </div>
         
-        <!-- STEP 1 -->
+        <!-- STEP 1: WHO -->
         <div class="form-section active" id="step-1">
             <h2 class="section-title">Who was it?</h2>
             <div class="input-group">
@@ -253,12 +305,19 @@
             </div>
         </div>
         
-        <!-- STEP 2 -->
+        <!-- STEP 2: ITEMS + PRODUCT DETAILS -->
         <div class="form-section" id="step-2">
             <h2 class="section-title">What did they want?</h2>
+            <p class="section-subtitle">Be specific — include SKU, colors, materials so I can cross-reference against their needs</p>
+            
+            <div class="product-detail-box">
+                <h4>🎯 AI Product Lookup</h4>
+                <p>Just give me the <strong>SKU # or collection name</strong> (e.g., "Dorsten 7720538"). I'll search and retrieve specs (dimensions, materials, price) then analyze if it's the right fit for their needs.</p>
+            </div>
+            
             <div class="input-group">
-                <label>Items They Liked *</label>
-                <textarea id="itemsLiked" placeholder="Dawkins Modular Sectional, Cambria Queen Bed..."></textarea>
+                <label>Items They Liked * (Be Detailed)</label>
+                <textarea id="itemsLiked" placeholder="Dorsten Slate Sofa (SKU: 7720538) — or just: 'Dorsten collection, they liked the gray sofa'"></textarea>
             </div>
             <div class="input-group">
                 <label>Favorites List / Cart #</label>
@@ -268,18 +327,188 @@
                 <label>Order/Quote #</label>
                 <input type="text" id="orderNumber" placeholder="Quote #67890 (if started)">
             </div>
+            <div class="input-group">
+                <label>Estimated Sale Value</label>
+                <input type="number" id="estimatedValue" placeholder="2500" min="0" step="100">
+            </div>
             <div class="nav-buttons">
                 <button class="btn-secondary" onclick="prevStep(1)">← Back</button>
                 <button class="btn-primary" onclick="nextStep(3)">Next →</button>
             </div>
         </div>
         
-        <!-- STEP 3 -->
+        <!-- STEP 3: DISCOVERY QUESTIONS -->
         <div class="form-section" id="step-3">
+            <h2 class="section-title">Discovery Questions</h2>
+            <p class="section-subtitle">Ask 3-5 key questions to narrow down needs. Tap the ones you asked.</p>
+            
+            <button class="collapse-btn" onclick="toggleDiscovery()">📋 Show/Hide All 30 Questions</button>
+            
+            <div id="discoveryQuestions">
+                <div class="discovery-question">
+                    <label><span class="question-num">1</span> Is this a brand new home or updating certain rooms?</label>
+                    <input type="text" class="dq-answer" data-q="1" placeholder="New home / Updating / Mix">
+                </div>
+                
+                <div class="discovery-question">
+                    <label><span class="question-num">2</span> Do you have any pets or children?</label>
+                    <input type="text" class="dq-answer" data-q="2" placeholder="Pets: Y/N, Kids: ages">
+                </div>
+                
+                <div class="discovery-question">
+                    <label><span class="question-num">3</span> Do you have pictures of the product you have in mind?</label>
+                    <input type="text" class="dq-answer" data-q="3" placeholder="Y/N — describe if yes">
+                </div>
+                
+                <div class="discovery-question">
+                    <label><span class="question-num">4</span> What is your vision for the room?</label>
+                    <textarea class="dq-answer" data-q="4" placeholder="Cozy, modern, minimalist, etc."></textarea>
+                </div>
+                
+                <div class="discovery-question">
+                    <label><span class="question-num">5</span> Do you need space saving furniture?</label>
+                    <input type="text" class="dq-answer" data-q="5" placeholder="Y/N — small space?">
+                </div>
+                
+                <div class="discovery-question">
+                    <label><span class="question-num">6</span> Where else have you been shopping?</label>
+                    <input type="text" class="dq-answer" data-q="6" placeholder="Competitors visited">
+                </div>
+                
+                <div class="discovery-question">
+                    <label><span class="question-num">7</span> What else have you seen?</label>
+                    <textarea class="dq-answer" data-q="7" placeholder="Styles, pieces, prices seen elsewhere"></textarea>
+                </div>
+                
+                <div class="discovery-question">
+                    <label><span class="question-num">8</span> How do we compare to what you have seen?</label>
+                    <input type="text" class="dq-answer" data-q="8" placeholder="Better/worse — specific points">
+                </div>
+                
+                <div class="discovery-question">
+                    <label><span class="question-num">9</span> What type of lighting is in the room?</label>
+                    <input type="text" class="dq-answer" data-q="9" placeholder="Natural, overhead, lamps">
+                </div>
+                
+                <div class="discovery-question">
+                    <label><span class="question-num">10</span> Do you prefer Traditional or Contemporary?</label>
+                    <input type="text" class="dq-answer" data-q="10" placeholder="Traditional / Contemporary / Mix">
+                </div>
+                
+                <div class="discovery-question">
+                    <label><span class="question-num">11</span> Where did you get your inspiration from?</label>
+                    <input type="text" class="dq-answer" data-q="11" placeholder="Pinterest, magazine, friend">
+                </div>
+                
+                <div class="discovery-question">
+                    <label><span class="question-num">12</span> Where are the doorways and entryways?</label>
+                    <input type="text" class="dq-answer" data-q="12" placeholder="Layout constraints">
+                </div>
+                
+                <div class="discovery-question">
+                    <label><span class="question-num">13</span> Do you have any permanent fixtures in the room?</label>
+                    <input type="text" class="dq-answer" data-q="13" placeholder="Built-ins, fireplace, etc.">
+                </div>
+                
+                <div class="discovery-question">
+                    <label><span class="question-num">14</span> How will you be using the space?</label>
+                    <textarea class="dq-answer" data-q="14" placeholder="Entertaining, family time, work, etc."></textarea>
+                </div>
+                
+                <div class="discovery-question">
+                    <label><span class="question-num">15</span> Do you entertain in your home?</label>
+                    <input type="text" class="dq-answer" data-q="15" placeholder="Often / Sometimes / Rarely">
+                </div>
+                
+                <div class="discovery-question">
+                    <label><span class="question-num">16</span> What colors do you prefer?</label>
+                    <input type="text" class="dq-answer" data-q="16" placeholder="Neutrals, bolds, specific palette">
+                </div>
+                
+                <div class="discovery-question">
+                    <label><span class="question-num">17</span> What types of fabrics do you prefer?</label>
+                    <input type="text" class="dq-answer" data-q="17" placeholder="Leather, linen, performance">
+                </div>
+                
+                <div class="discovery-question">
+                    <label><span class="question-num">18</span> Do you have hardwood floors or carpet?</label>
+                    <input type="text" class="dq-answer" data-q="18" placeholder="Hardwood / Carpet / Mix">
+                </div>
+                
+                <div class="discovery-question">
+                    <label><span class="question-num">19</span> Is availability important to you?</label>
+                    <input type="text" class="dq-answer" data-q="19" placeholder="Need it now / Can wait">
+                </div>
+                
+                <div class="discovery-question">
+                    <label><span class="question-num">20</span> Are you interested in stationary or reclining?</label>
+                    <input type="text" class="dq-answer" data-q="20" placeholder="Stationary / Reclining / Both">
+                </div>
+                
+                <div class="discovery-question">
+                    <label><span class="question-num">21</span> Do you switch furniture around or keep same setup?</label>
+                    <input type="text" class="dq-answer" data-q="21" placeholder="Switch often / Keep static">
+                </div>
+                
+                <div class="discovery-question">
+                    <label><span class="question-num">22</span> What is the focal point of the room?</label>
+                    <input type="text" class="dq-answer" data-q="22" placeholder="TV, fireplace, window, etc.">
+                </div>
+                
+                <div class="discovery-question">
+                    <label><span class="question-num">23</span> What is currently in the room?</label>
+                    <textarea class="dq-answer" data-q="23" placeholder="Existing furniture staying"></textarea>
+                </div>
+                
+                <div class="discovery-question">
+                    <label><span class="question-num">24</span> How important is durability?</label>
+                    <input type="text" class="dq-answer" data-q="24" placeholder="Very / Somewhat / Not priority">
+                </div>
+                
+                <div class="discovery-question">
+                    <label><span class="question-num">25</span> What features and benefits are most important?</label>
+                    <textarea class="dq-answer" data-q="25" placeholder="Comfort, style, easy clean, etc."></textarea>
+                </div>
+                
+                <div class="discovery-question">
+                    <label><span class="question-num">26</span> What room are you most excited about?</label>
+                    <input type="text" class="dq-answer" data-q="26" placeholder="Living room, bedroom, etc.">
+                </div>
+                
+                <div class="discovery-question">
+                    <label><span class="question-num">27</span> Why are you replacing your current set?</label>
+                    <input type="text" class="dq-answer" data-q="27" placeholder="Worn out, moving, style change">
+                </div>
+                
+                <div class="discovery-question">
+                    <label><span class="question-num">28</span> What do you like/dislike about current furniture?</label>
+                    <textarea class="dq-answer" data-q="28" placeholder="Pain points to avoid"></textarea>
+                </div>
+                
+                <div class="discovery-question">
+                    <label><span class="question-num">29</span> What would you like to accomplish in this room?</label>
+                    <textarea class="dq-answer" data-q="29" placeholder="Goals for the space"></textarea>
+                </div>
+                
+                <div class="discovery-question">
+                    <label><span class="question-num">30</span> Create your own</label>
+                    <input type="text" class="dq-answer" data-q="30" placeholder="Custom question/answer">
+                </div>
+            </div>
+            
+            <div class="nav-buttons">
+                <button class="btn-secondary" onclick="prevStep(2)">← Back</button>
+                <button class="btn-skip" onclick="nextStep(4)">Skip →</button>
+                <button class="btn-primary" onclick="nextStep(4)">Next →</button>
+            </div>
+        </div>
+        
+        <!-- STEP 4: INTEL -->
+        <div class="form-section" id="step-4">
             <h2 class="section-title">What did you learn?</h2>
             <div class="input-group">
-                <label>Personal Intel *</label>
-                <textarea id="personalIntel" placeholder="Moving next month, has a dog, worried about fabric durability, budget around $2k..."></textarea>
+                <label>Personal Intel * (Lifestyle, urgency, budget signals, family)</label>
+                <textarea id="personalIntel" placeholder="Moving next month, first furniture purchase in 10 years, has a dog, worried about fabric durability..."></textarea>
                 <div class="quick-tags">
                     <span class="quick-tag" onclick="addTag(this, 'personalIntel')">Moving soon</span>
                     <span class="quick-tag" onclick="addTag(this, 'personalIntel')">First purchase</span>
@@ -291,18 +520,14 @@
                     <span class="quick-tag" onclick="addTag(this, 'personalIntel')">Spouse not present</span>
                 </div>
             </div>
-            <div class="input-group">
-                <label>Estimated Sale Value</label>
-                <input type="number" id="estimatedValue" placeholder="2500" min="0" step="100">
-            </div>
             <div class="nav-buttons">
-                <button class="btn-secondary" onclick="prevStep(2)">← Back</button>
-                <button class="btn-primary" onclick="nextStep(4)">Next →</button>
+                <button class="btn-secondary" onclick="prevStep(3)">← Back</button>
+                <button class="btn-primary" onclick="nextStep(5)">Next →</button>
             </div>
         </div>
         
-        <!-- STEP 4 -->
-        <div class="form-section" id="step-4">
+        <!-- STEP 5: STATUS -->
+        <div class="form-section" id="step-5">
             <h2 class="section-title">Where are we?</h2>
             <div class="input-group">
                 <label>Status *</label>
@@ -332,14 +557,19 @@
                 <input type="date" id="nextFollowUp">
             </div>
             <div class="nav-buttons">
-                <button class="btn-secondary" onclick="prevStep(3)">← Back</button>
+                <button class="btn-secondary" onclick="prevStep(4)">← Back</button>
                 <button class="btn-primary" onclick="generateOutput()">Generate →</button>
             </div>
         </div>
         
-        <!-- STEP 5 -->
-        <div class="form-section" id="step-5">
-            <h2 class="section-title">Send to your AI</h2>
+        <!-- STEP 6: OUTPUT -->
+        <div class="form-section" id="step-6">
+            <h2 class="section-title">Send to Your AI</h2>
+            
+            <div class="instructions">
+                <h4>📋 What Happens Next:</h4>
+                <p>1. Copy this text<br>2. Send to your AI<br>3. AI will analyze product fit + generate recommendations + draft message</p>
+            </div>
             
             <div style="background: rgba(255,255,255,0.03); border-radius: 16px; padding: 20px; margin-bottom: 20px;">
                 <div class="summary-row">
@@ -354,34 +584,29 @@
                     <span class="summary-label">Next Follow-Up</span>
                     <span class="summary-value" id="summaryDate">-</span>
                 </div>
-                <div class="summary-row">
-                    <span class="summary-label">Est. Value</span>
-                    <span class="summary-value" id="summaryValue">-</span>
-                </div>
             </div>
             
-            <label style="margin-bottom: 12px; display: block;">Copy this & send to your AI:</label>
+            <label style="margin-bottom: 12px; display: block; color: #a0a0b0; font-size: 13px; text-transform: uppercase;">Copy this & send:</label>
             <div class="output-box" id="output"></div>
             
             <button class="btn-primary copy-btn" onclick="copyOutput()">📋 Copy to Clipboard</button>
             
             <div class="share-options">
-                <a href="#" class="share-btn share-telegram" id="telegramShare" target="_blank">
-                    📱 Telegram
-                </a>
-                <a href="#" class="share-btn share-whatsapp" id="whatsappShare" target="_blank">
-                    💬 WhatsApp
-                </a>
+                <button class="share-btn share-telegram" onclick="shareToTelegram()">📱 Telegram</button>
+                <button class="share-btn share-whatsapp" onclick="shareToWhatsApp()">💬 WhatsApp</button>
             </div>
             
             <div class="nav-buttons" style="margin-top: 24px;">
-                <button class="btn-secondary" onclick="resetForm()">🔄 New Debrief</button>
+                <button class="btn-secondary" onclick="resetForm()">🛋️ New Debrief</button>
             </div>
         </div>
     </div>
     
     <script>
         let currentStep = 1;
+        let formData = {};
+        let discoveryAnswers = {};
+        let generatedText = '';
         
         function nextStep(step) {
             if (!validateStep(currentStep)) return;
@@ -412,6 +637,11 @@
             currentStep = step;
         }
         
+        function toggleDiscovery() {
+            const el = document.getElementById('discoveryQuestions');
+            el.style.display = el.style.display === 'none' ? 'block' : 'none';
+        }
+        
         function validateStep(step) {
             if (step === 1) {
                 const name = document.getElementById('clientName').value.trim();
@@ -421,11 +651,11 @@
                 const items = document.getElementById('itemsLiked').value.trim();
                 if (!items) { alert('Please enter what items they liked'); return false; }
             }
-            if (step === 3) {
+            if (step === 4) {
                 const intel = document.getElementById('personalIntel').value.trim();
                 if (!intel) { alert('Please enter some personal intel'); return false; }
             }
-            if (step === 4) {
+            if (step === 5) {
                 const status = document.getElementById('status').value;
                 const date = document.getElementById('nextFollowUp').value;
                 if (!status) { alert('Please select a status'); return false; }
@@ -453,70 +683,104 @@
             document.getElementById(hiddenId).value = element.textContent;
         }
         
+        function collectDiscoveryAnswers() {
+            const answers = {};
+            document.querySelectorAll('.dq-answer').forEach(input => {
+                const qNum = input.getAttribute('data-q');
+                const val = input.value.trim();
+                if (val) {
+                    answers[qNum] = val;
+                }
+            });
+            return answers;
+        }
+        
         function generateOutput() {
-            if (!validateStep(4)) return;
+            if (!validateStep(5)) return;
             
-            const data = {
+            discoveryAnswers = collectDiscoveryAnswers();
+            
+            formData = {
                 clientName: document.getElementById('clientName').value.trim(),
                 phone: document.getElementById('phone').value.trim(),
                 email: document.getElementById('email').value.trim(),
                 itemsLiked: document.getElementById('itemsLiked').value.trim(),
                 favoritesList: document.getElementById('favoritesList').value.trim(),
                 orderNumber: document.getElementById('orderNumber').value.trim(),
-                personalIntel: document.getElementById('personalIntel').value.trim(),
                 estimatedValue: document.getElementById('estimatedValue').value,
+                personalIntel: document.getElementById('personalIntel').value.trim(),
                 status: document.getElementById('status').value,
                 closingLever: document.getElementById('closingLever').value,
                 nextFollowUp: document.getElementById('nextFollowUp').value
             };
             
-            document.getElementById('summaryName').textContent = data.clientName;
-            document.getElementById('summaryStatus').textContent = data.status;
-            document.getElementById('summaryDate').textContent = data.nextFollowUp;
-            document.getElementById('summaryValue').textContent = data.estimatedValue ? '$' + parseInt(data.estimatedValue).toLocaleString() : 'Not estimated';
+            document.getElementById('summaryName').textContent = formData.clientName;
+            document.getElementById('summaryStatus').textContent = formData.status;
+            document.getElementById('summaryDate').textContent = formData.nextFollowUp;
             
-            const output = `🛋️ ASHLEY DEBRIEF
+            // Build discovery Q&A section
+            let discoverySection = '';
+            const dqEntries = Object.entries(discoveryAnswers);
+            if (dqEntries.length > 0) {
+                discoverySection = '\n📋 DISCOVERY QUESTIONS ANSWERED:\n';
+                dqEntries.forEach(([num, ans]) => {
+                    discoverySection += `Q${num}: ${ans}\n`;
+                });
+            } else {
+                discoverySection = '\n📋 DISCOVERY QUESTIONS: Not asked\n';
+            }
+            
+            generatedText = `🛋️ ASHLEY DEBRIEF
 
-Client: ${data.clientName}
-Phone: ${data.phone || 'N/A'}
-Email: ${data.email || 'N/A'}
+Client: ${formData.clientName}
+Phone: ${formData.phone || 'N/A'}
+Email: ${formData.email || 'N/A'}
 
-Items Liked:
-${data.itemsLiked}
+🎯 ITEMS LIKED (Product Analysis Request):
+${formData.itemsLiked}
 
-Personal Intel:
-${data.personalIntel}
+👤 PERSONAL INTEL:
+${formData.personalIntel}
 
-Store Details:
-• Favorites List: ${data.favoritesList || 'None'}
-• Order/Quote #: ${data.orderNumber || 'Not started'}
-• Estimated Value: ${data.estimatedValue ? '$' + data.estimatedValue : 'Not estimated'}
+${discoverySection}
 
-Sales Pipeline:
-• Status: ${data.status}
-• Closing Lever: ${data.closingLever || 'Not identified'}
-• Next Follow-Up: ${data.nextFollowUp}
+💼 STORE DETAILS:
+• Favorites List: ${formData.favoritesList || 'None'}
+• Order/Quote #: ${formData.orderNumber || 'Not started'}
+• Estimated Value: ${formData.estimatedValue ? '$' + formData.estimatedValue : 'Not estimated'}
+
+📊 SALES PIPELINE:
+• Status: ${formData.status}
+• Closing Lever: ${formData.closingLever || 'Not identified'}
+• Next Follow-Up: ${formData.nextFollowUp}
 
 ---
-ACTION: Process into Notion, create Obsidian note, generate draft message`;
+🤖 AI ACTIONS:
+1. Analyze product fit: Do the items they liked align with discovery answers?
+2. If misaligned → Suggest better Ashley Furniture alternatives
+3. Generate draft message using items + personal intel + closing lever
+4. Create Notion entry + Obsidian note`;
             
-            document.getElementById('output').textContent = output;
-            
-            // Set up share links
-            const encodedText = encodeURIComponent(output);
-            document.getElementById('telegramShare').href = `https://t.me/share/url?url=&text=${encodedText}`;
-            document.getElementById('whatsappShare').href = `https://wa.me/?text=${encodedText}`;
-            
-            nextStep(5);
+            document.getElementById('output').textContent = generatedText;
+            nextStep(6);
         }
         
         function copyOutput() {
-            const output = document.getElementById('output').textContent;
-            navigator.clipboard.writeText(output).then(() => {
+            navigator.clipboard.writeText(generatedText).then(() => {
                 const btn = document.querySelector('.copy-btn');
                 btn.textContent = '✅ Copied!';
                 setTimeout(() => btn.textContent = '📋 Copy to Clipboard', 2000);
             });
+        }
+        
+        function shareToTelegram() {
+            const encodedText = encodeURIComponent(generatedText);
+            window.open(`https://t.me/share/url?url=&text=${encodedText}`, '_blank');
+        }
+        
+        function shareToWhatsApp() {
+            const encodedText = encodeURIComponent(generatedText);
+            window.open(`https://wa.me/?text=${encodedText}`, '_blank');
         }
         
         function resetForm() {
@@ -526,6 +790,9 @@ ACTION: Process into Notion, create Obsidian note, generate draft message`;
                 d.classList.remove('completed', 'active');
             });
             document.querySelector('.step-dot[data-step="1"]').classList.add('active');
+            document.getElementById('discoveryQuestions').style.display = 'block';
+            generatedText = '';
+            discoveryAnswers = {};
             currentStep = 1;
             nextStep(1);
         }
